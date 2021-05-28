@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 
 using namespace std;
 #define Unique(x) x.erase(unique(all(x)), x.end())
@@ -28,11 +28,11 @@ int convert(const string str)
 }
 
 template<class T>
-struct Heap
+struct Heap_Array
 {
     vector<T> data; // у i наследники 2*i+1 и 2*i+2
 
-    explicit Heap(const vector<T> &vec) : data(vec)
+    explicit Heap_Array(const vector<T> &vec) : data(vec)
     {
         sort(data.begin(), data.end(), comp<T>);
         Unique(data);
@@ -40,13 +40,13 @@ struct Heap
             swap(data[i], data[i + 1]);
     };
 
-    Heap(const Heap<T> &heap) : data(heap.data)
+    Heap_Array(const Heap_Array<T> &heap) : data(heap.data)
     {}
 
-    Heap() : data(vector<T>())
+    Heap_Array() : data(vector<T>())
     {};
 
-    explicit Heap(const string &str, int check)
+    explicit Heap_Array(const string &str, int check)
     {
         vector<int> vec;
         for (int i = 0; i < str.size(); i++)
@@ -60,7 +60,7 @@ struct Heap
                 vec.emplace_back(convert(str.substr(i, j - i)));
             i = j;
         }
-        *this = Heap(vec);
+        *this = Heap_Array(vec);
     }
 
     void insert(T v);
@@ -210,19 +210,19 @@ struct Heap
             printRNL(2 * it + 1, os);
     }
 
-    Heap<T> &sub_heap(T v) const;
+    Heap_Array<T> &sub_heap(T v) const;
 
     void app_child(int it, vector<T> &vec) const;
 
-    bool equal_child(int it1, int it2, const Heap<T> &heap) const;
+    bool equal_child(int it1, int it2, const Heap_Array<T> &heap) const;
 
-    bool search_heap(const Heap<T> &heap) const;
+    bool search_heap(const Heap_Array<T> &heap) const;
 
-    ~Heap<T>() = default;
+    ~Heap_Array<T>() = default;
 };
 
 template<class T>
-void Heap<T>::insert(T v)
+void Heap_Array<T>::insert(T v)
 {
     if (search(v) >= 0)
         return;
@@ -245,7 +245,7 @@ void Heap<T>::insert(T v)
 }
 
 template<class T>
-int Heap<T>::search(T v, int it) const
+int Heap_Array<T>::search(T v, int it) const
 {
     if (size() == 0)
         return -1;
@@ -262,13 +262,13 @@ int Heap<T>::search(T v, int it) const
 }
 
 template<class T>
-void Heap<T>::remove(T v)
+void Heap_Array<T>::remove(T v)
 {
     int it = search(v);
     if (it != -1)
     {
         data.erase(data.begin() + search(v));
-        *this = Heap(data);
+        *this = Heap_Array(data);
     }
     /*
     int it = search(v);
@@ -294,20 +294,20 @@ void Heap<T>::remove(T v)
 
 
 template<class T>
-Heap<T> &Heap<T>::sub_heap(T v) const
+Heap_Array<T> &Heap_Array<T>::sub_heap(T v) const
 {
     int it = search(v);
     if (it == -1)
     {
-        return *(new Heap<T>());
+        return *(new Heap_Array<T>());
     }
     vector<T> h;
     app_child(it, h);
-    return *(new Heap<T>(h));
+    return *(new Heap_Array<T>(h));
 }
 
 template<class T>
-void Heap<T>::app_child(int it, vector<T> &vec) const
+void Heap_Array<T>::app_child(int it, vector<T> &vec) const
 {
     vec.template emplace_back(data[it]);
     if (check(2 * it + 1))
@@ -317,7 +317,7 @@ void Heap<T>::app_child(int it, vector<T> &vec) const
 }
 
 template<class T>
-bool Heap<T>::search_heap(const Heap<T> &heap) const
+bool Heap_Array<T>::search_heap(const Heap_Array<T> &heap) const
 {
     int it = search(heap.data[0]);
     if (it == -1 || heap.data.size() > data.size())
@@ -326,7 +326,7 @@ bool Heap<T>::search_heap(const Heap<T> &heap) const
 }
 
 template<class T>
-bool Heap<T>::equal_child(int it1, int it2, const Heap<T> &heap) const
+bool Heap_Array<T>::equal_child(int it1, int it2, const Heap_Array<T> &heap) const
 {
     if (check(it1) != heap.check(it2) || data[it1] != heap[it2])
         return false;
@@ -343,7 +343,7 @@ bool Heap<T>::equal_child(int it1, int it2, const Heap<T> &heap) const
 }
 
 template<class T>
-void par_node(const Heap<T> &heap)
+void par_node(const Heap_Array<T> &heap)
 {
     cout << heap.data[0] << " ";
     for (int i = 1; i < heap.data.size(); i++)

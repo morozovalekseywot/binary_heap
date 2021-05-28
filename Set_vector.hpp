@@ -5,7 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 #include <iterator>
 
 using namespace std;
@@ -152,6 +152,18 @@ struct Set_vec
     friend bool operator==(const Set_vec<T> &a, const Set_vec<T> &b)
     {
         return a.vec.data == b.vec.data;
+    }
+
+    friend bool operator==(const Set_vec<T> &a, const set<T> &b)
+    {
+        if (a.size() != b.size())
+            return false;
+        for (int i = 0; i < a.size(); i++)
+        {
+            if (b.find(a.vec[i]) == b.end())
+                return false;
+        }
+        return true;
     }
 
     friend ostream &operator<<(ostream &os, const Set_vec &b)

@@ -2,5 +2,5 @@ cmake_minimum_required(VERSION 3.19)
 project(binary_heap)
 
 set(CMAKE_CXX_STANDARD 20)
-
-add_executable(binary_heap main.cpp binary_heap.h Set.h set_vector.h)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+add_executable(binary_heap main.cpp Heap_Array.hpp Set_Array.hpp Set_vector.hpp Heap_Node.hpp tests.hpp Set_Node.hpp functions.hpp)
