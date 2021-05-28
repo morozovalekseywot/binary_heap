@@ -34,10 +34,13 @@ struct Heap_Array
 
     explicit Heap_Array(const vector<T> &vec) : data(vec)
     {
-        sort(data.begin(), data.end(), comp<T>);
-        Unique(data);
-        for (int i = 1; i < data.size() - 1; i += 2)
-            swap(data[i], data[i + 1]);
+        if (!data.empty())
+        {
+            sort(data.begin(), data.end(), comp<T>);
+            Unique(data);
+            for (int i = 1; i < data.size() - 1; i += 2)
+                swap(data[i], data[i + 1]);
+        }
     };
 
     Heap_Array(const Heap_Array<T> &heap) : data(heap.data)
@@ -55,7 +58,7 @@ struct Heap_Array
             while (j < str.size() && str[j] != ' ')
                 j++;
             if (str[i] == '-')
-                vec.emplace_back(-convert(str.substr(i+1, j - i - 1)));
+                vec.emplace_back(-convert(str.substr(i + 1, j - i - 1)));
             else
                 vec.emplace_back(convert(str.substr(i, j - i)));
             i = j;
@@ -71,7 +74,7 @@ struct Heap_Array
 
 
     //void heapify(int it = 0);
-    [[nodiscard]] bool check(int it) const
+    [[nodiscard]] inline bool check(int it) const
     {
         return it < data.size();//&& heap[it] != NULL
     }
@@ -81,7 +84,7 @@ struct Heap_Array
         return data.size();
     }
 
-    void check_brother(int it)
+    void inline check_brother(int it)
     {
         if (it < 0)
             return;
@@ -251,12 +254,14 @@ int Heap_Array<T>::search(T v, int it) const
         return -1;
     if (data[it] == v)
         return it;
-    int ans = 0;
-    if (check(2 * it + 1) && v <= data[2 * it + 1])
-        ans = search(v, 2 * it + 1);
-    if (ans > 0)
-        return ans;
-    if (check(2 * it + 2) && v <= data[2 * it + 2])
+
+    if (2 * it + 1 < data.size() && v <= data[2 * it + 1])
+    {
+        int ans = search(v, 2 * it + 1);
+        if (ans > 0)
+            return ans;
+    }
+    if (2 * it + 2 < data.size() && v <= data[2 * it + 2])
         return search(v, 2 * it + 2);
     return -1;
 }
@@ -343,7 +348,7 @@ bool Heap_Array<T>::equal_child(int it1, int it2, const Heap_Array<T> &heap) con
 }
 
 template<class T>
-void par_node(const Heap_Array<T> &heap)
+void parent_node(const Heap_Array<T> &heap)
 {
     cout << heap.data[0] << " ";
     for (int i = 1; i < heap.data.size(); i++)
