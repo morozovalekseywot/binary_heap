@@ -1,5 +1,5 @@
 # Project exclude paths
 /cmake-build-debug-mingw/
 /cmake-build-release-mingw/
-/cmake-build-debug
 /.idea
+pomoika.cpp
