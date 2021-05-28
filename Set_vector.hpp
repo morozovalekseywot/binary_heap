@@ -70,6 +70,7 @@ struct Set_vec
 
     Set_vec<T> &operator+(const Set_vec<T> &b) const
     {
+        /*
         vector<T> ans(vec.size() + b.size());
         int i = 0, j = 0, size = 0;
         while (i < vec.size() && j < b.size())
@@ -97,10 +98,13 @@ struct Set_vec
 
         ans.resize(size);
         return *(new Set_vec(ans));
+         */
+        return merge(vec.begin(),vec.end(),b.vec.begin(),b.vec.end());
     }
 
     Set_vec<T> &operator-(const Set_vec<T> &b) const
     {
+        /*
         vector<T> ans(vec.size());
         int i = 0, j = 0, size = 0;
         while (i < vec.size() && j < b.size())
@@ -125,10 +129,16 @@ struct Set_vec
                 ans[size++] = vec[i++];
         ans.resize(size);
         return *(new Set_vec(ans));
+         */
+        vector<T> ans(vec.size());
+        set_difference(all(vec),all(b.vec)),ans.begin();
+        ans.shrink_to_fit();
+        return *(new Set_vec(ans));
     }
 
     Set_vec<T> &operator*(const Set_vec<T> &b) const
     {
+        /*
         vector<T> ans(vec.size());
         int i = 0, j = 0, size = 0;
         while (i < vec.size() && j < b.size())
@@ -146,6 +156,11 @@ struct Set_vec
                 j++;
         }
         ans.resize(size);
+        return *(new Set_vec(ans));
+         */
+        vector<T> ans(vec.size());
+        set_intersection(all(vec),all(b.vec)),ans.begin();
+        ans.shrink_to_fit();
         return *(new Set_vec(ans));
     }
 

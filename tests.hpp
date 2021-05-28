@@ -9,7 +9,7 @@
 #include "Set_Array.hpp"
 #include "Set_Node.hpp"
 #include <random>
-#define Max -10000000
+#define Max 10000000
 pair<int, int> test_create(const int n)
 {
     default_random_engine generator;
@@ -132,14 +132,18 @@ pair<int, int> test_search(const int n)
 pair<int, int> test_sum(const int n)
 {
     default_random_engine generator;
-    uniform_int_distribution<int> distribution(-Max/100,Max/100);
+    uniform_int_distribution<int> distribution(-n,n);
     vector<int> values(n);
     vector<int> val(n);
+    set<int> set1;
+    set<int> set2;
     for (int i = 0; i < n; i++)
     {
         int value = distribution(generator);
         values[i] = value;
+        set1.insert(value);
         val[i]=distribution(generator);
+        set2.insert(val[i]);
     }
     Set_Node<int> set_node(values);
     Set_Array<int> set_array(values);
@@ -154,20 +158,26 @@ pair<int, int> test_sum(const int n)
     set_array+sub_array;
     endTime = chrono::steady_clock::now();
     int array_time = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
-
+//    set1.insert(set2.begin(),set2.end());
+//    assert(set_node+sub_node == set1);
+//    assert(set_array+sub_array == set1);
     return {node_time, array_time};
 }
 pair<int, int> test_subtraction(const int n)
 {
     default_random_engine generator;
-    uniform_int_distribution<int> distribution(-Max/100,Max/100);
+    uniform_int_distribution<int> distribution(-n,n);
     vector<int> values(n);
     vector<int> val(n);
+    set<int> set1;
+    set<int> set2;
     for (int i = 0; i < n; i++)
     {
         int value = distribution(generator);
         values[i] = value;
+        set1.insert(value);
         val[i]=distribution(generator);
+        set2.insert(val[i]);
     }
     Set_Node<int> set_node(values);
     Set_Array<int> set_array(values);
@@ -183,5 +193,39 @@ pair<int, int> test_subtraction(const int n)
     endTime = chrono::steady_clock::now();
     int array_time = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
 
+//    set1.erase(set2.begin(),set2.end());
+//    assert(set_node+sub_node == set1);
+//    assert(set_array+sub_array == set1);
+    return {node_time, array_time};
+}
+pair<int, int> test_intersection(const int n)
+{
+    default_random_engine generator;
+    uniform_int_distribution<int> distribution(-n,n);
+    vector<int> values(n);
+    vector<int> val(n);
+    set<int> set1;
+    set<int> set2;
+    for (int i = 0; i < n; i++)
+    {
+        int value = distribution(generator);
+        values[i] = value;
+        set1.insert(value);
+        val[i]=distribution(generator);
+        set2.insert(val[i]);
+    }
+    Set_Node<int> set_node(values);
+    Set_Array<int> set_array(values);
+    Set_Node<int> sub_node(values);
+    Set_Array<int> sub_array(values);
+    auto startTime = chrono::steady_clock::now();
+    set_node*sub_node;
+    auto endTime = chrono::steady_clock::now();
+    int node_time = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
+
+    startTime = chrono::steady_clock::now();
+    set_array*sub_array;
+    endTime = chrono::steady_clock::now();
+    int array_time = chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
     return {node_time, array_time};
 }
