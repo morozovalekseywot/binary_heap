@@ -54,7 +54,10 @@ struct Heap
             int j = i;
             while (j < str.size() && str[j] != ' ')
                 j++;
-            vec.emplace_back(convert(str.substr(i, j-i)));
+            if (str[i] == '-')
+                vec.emplace_back(-convert(str.substr(i+1, j - i - 1)));
+            else
+                vec.emplace_back(convert(str.substr(i, j - i)));
             i = j;
         }
         *this = Heap(vec);

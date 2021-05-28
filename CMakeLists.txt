@@ -3,4 +3,4 @@ project(binary_heap)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(binary_heap main.cpp binary_heap.h Set.h)
+add_executable(binary_heap main.cpp binary_heap.h Set.h set_vector.h)
