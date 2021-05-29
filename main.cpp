@@ -17,12 +17,12 @@ int main()
                 cout << "Write an items:" << endl;
                 getline(cin, str);
                 getline(cin, str);
-                Set_Node<int> st = setFromString(str);
+                Set_Array<int> st(str, true);
                 int s2 = -1, item;
                 while (s2 != 0)
                 {
                     cout << endl << "Your set:" << endl;
-                    st.print(cout);
+                    cout << st;
                     cout << endl << endl << "Select the action with set:" << endl
                          << "1 - insert element" << endl
                          << "2 - search element" << endl
@@ -63,11 +63,10 @@ int main()
                             cout << "Write an items:" << endl;
                             getline(cin, str);
                             getline(cin, str);
-                            Set_Node<int> new_st = setFromString(str);
+                            Set_Array<int> new_st(str, true);
                             cout << endl << "New set:" << endl;
-                            new_st.print(cout);
-                            cout << endl;
-                            st = st.intersection(new_st);
+                            cout << new_st << endl;
+                            st = st * new_st;
                             break;
                         }
                         case 5:
@@ -75,11 +74,10 @@ int main()
                             cout << "Write an items:" << endl;
                             getline(cin, str);
                             getline(cin, str);
-                            Set_Node<int> new_st = setFromString(str);
+                            Set_Array<int> new_st(str, true);
                             cout << endl << "New set:" << endl;
-                            new_st.print(cout);
-                            cout << endl;
-                            st = st.unification(new_st);
+                            cout << new_st << endl;
+                            st = st + new_st;
                             break;
                         }
                         case 6:
@@ -87,11 +85,10 @@ int main()
                             cout << "Write an items:" << endl;
                             getline(cin, str);
                             getline(cin, str);
-                            Set_Node<int> new_st = setFromString(str);
+                            Set_Array<int> new_st(str, true);
                             cout << endl << "New set:" << endl;
-                            new_st.print(cout);
-                            cout << endl;
-                            st = st.subtraction(new_st);
+                            cout << new_st << endl;
+                            st = st - new_st;
                             break;
                         }
                         case 7:
@@ -99,10 +96,9 @@ int main()
                             cout << "Write an items:" << endl;
                             getline(cin, str);
                             getline(cin, str);
-                            Set_Node<int> new_st = setFromString(str);
+                            Set_Array<int> new_st(str, true);
                             cout << endl << "New set:" << endl;
-                            new_st.print(cout);
-                            cout << endl << endl;
+                            cout << new_st << endl << endl;
                             if (st.include(new_st)) cout << "TRUE";
                             else cout << "FALSE";
                             cout << endl;
@@ -126,12 +122,12 @@ int main()
                 cout << "Write an items:" << endl;
                 getline(cin, str);
                 getline(cin, str);
-                Heap_Node<int> hp = heapFromString(str);
+                Heap_Array<int> hp(str, true);
                 int s2 = -1, item;
                 while (s2 != 0)
                 {
                     cout << endl << "Your heap:" << endl;
-                    hp.NLR(cout);
+                    hp.printNLR(0, cout);
                     cout << endl << endl << "Select the action with heap:" << endl
                          << "1 - insert element" << endl
                          << "2 - search element" << endl
@@ -170,7 +166,7 @@ int main()
                         {
                             cout << "item: ";
                             cin >> item;
-                            hp = hp.subHeap(item);
+                            hp = hp.sub_heap(item);
                             break;
                         }
                         case 5:
@@ -178,11 +174,11 @@ int main()
                             cout << "Write an items:" << endl;
                             getline(cin, str);
                             getline(cin, str);
-                            Heap_Node<int> new_hp = heapFromString(str);
+                            Heap_Array<int> new_hp(str, true);
                             cout << endl << "New heap:" << endl;
-                            new_hp.NLR(cout);
+                            new_hp.printNLR(0, cout);
                             cout << endl;
-                            if (hp.searchHeap(new_hp)) cout << "TRUE";
+                            if (hp.search_heap(new_hp)) cout << "TRUE";
                             else cout << "FALSE";
                             cout << endl;
                             break;
@@ -206,37 +202,37 @@ int main()
                                 {
                                     case 1:
                                     {
-                                        hp.NLR(cout);
+                                        hp.printNLR(0, cout);
                                         s3 = 0;
                                         break;
                                     }
                                     case 2:
                                     {
-                                        hp.NRL(cout);
+                                        hp.printNRL(0, cout);
                                         s3 = 0;
                                         break;
                                     }
                                     case 3:
                                     {
-                                        hp.LRN(cout);
+                                        hp.printLRN(0, cout);
                                         s3 = 0;
                                         break;
                                     }
                                     case 4:
                                     {
-                                        hp.LNR(cout);
+                                        hp.printLNR(0, cout);
                                         s3 = 0;
                                         break;
                                     }
                                     case 5:
                                     {
-                                        hp.RLN(cout);
+                                        hp.printRLN(0, cout);
                                         s3 = 0;
                                         break;
                                     }
                                     case 6:
                                     {
-                                        hp.RNL(cout);
+                                        hp.printRNL(0, cout);
                                         s3 = 0;
                                         break;
                                     }

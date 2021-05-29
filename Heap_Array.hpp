@@ -11,13 +11,16 @@ using namespace std;
 #define all(x) x.begin(), x.end()
 
 template<class T>
-bool comp(T &a, T &b) {
+bool comp(T &a, T &b)
+{
     return a > b;
 }
 
-int convert(const string &str) {
+int convert(const string &str)
+{
     int ans = 0, k = 1;
-    for (int i = int(str.size()) - 1; i >= 0; i--) {
+    for (int i = int(str.size()) - 1; i >= 0; i--)
+    {
         ans += (str[i] - '0') * k;
         k *= 10;
     }
@@ -25,11 +28,14 @@ int convert(const string &str) {
 }
 
 template<class T>
-struct Heap_Array {
+struct Heap_Array
+{
     vector<T> data; // у i наследники 2*i+1 и 2*i+2
 
-    explicit Heap_Array(const vector<T> &vec) : data(vec) {
-        if (!data.empty()) {
+    explicit Heap_Array(const vector<T> &vec) : data(vec)
+    {
+        if (!data.empty())
+        {
             sort(data.begin(), data.end(), comp<T>);
             Unique(data);
             for (int i = 1; i < data.size() - 1; i += 2)
@@ -37,13 +43,17 @@ struct Heap_Array {
         }
     };
 
-    Heap_Array(const Heap_Array<T> &heap) : data(heap.data) {}
+    Heap_Array(const Heap_Array<T> &heap) : data(heap.data)
+    {}
 
-    Heap_Array() : data(vector<T>()) {};
+    Heap_Array() : data(vector<T>())
+    {};
 
-    explicit Heap_Array(const string &str, int check) {
+    explicit Heap_Array(const string &str, bool check)
+    {
         vector<int> vec;
-        for (int i = 0; i < str.size(); i++) {
+        for (int i = 0; i < str.size(); i++)
+        {
             int j = i;
             while (j < str.size() && str[j] != ' ')
                 j++;
@@ -64,40 +74,47 @@ struct Heap_Array {
 
 
     //void heapify(int it = 0);
-    [[nodiscard]] inline bool check(int it) const {
+    [[nodiscard]] inline bool check(int it) const
+    {
         return it < data.size();//&& heap[it] != NULL
     }
 
-    [[nodiscard]] int size() const {
+    [[nodiscard]] int size() const
+    {
         return data.size();
     }
 
-    void inline check_brother(int it) {
+    void inline check_brother(int it)
+    {
         if (it < 0)
             return;
         int left = 2 * it + 1, right = 2 * it + 2;
-        if (left < data.size() && right < data.size()) {
+        if (left < data.size() && right < data.size())
+        {
             if (data[left] > data[right])
                 swap(data[left], data[right]);
             return;
         }
     }
 
-    T operator[](int i) const {
+    T operator[](int i) const
+    {
         if (i < 0 || i >= data.size())
             throw out_of_range("Index out of range in operator []");
         return data[i];
     }
 
-    T &operator[](int i) {
+    T &operator[](int i)
+    {
         if (i < 0 || i >= data.size())
             throw out_of_range("Index out of range in operator &[]");
         return data[i];
     }
 
-    // == Обходы ==
-    // 1. КЛП = Корень Левый Правый
-    void printNLR(int it, ostream &os) {
+    // Обходы
+    // 1 - Корень Левый Правый
+    void printNLR(int it, ostream &os)
+    {
         os << data[it];
         if (check((it - 1) / 2))
             os << "{" << data[(it - 1) / 2] << "} ";
@@ -109,7 +126,8 @@ struct Heap_Array {
             printNLR(2 * it + 2, os);
     }
 
-    void printNLR2(int it, ostream &os) {
+    void printNLR2(int it, ostream &os)
+    {
         os << data[it];
         if (check((it - 1) / 2))
             os << "{" << data[(it - 1) / 2] << "} ";
@@ -125,8 +143,9 @@ struct Heap_Array {
             printNLR2(2 * it + 2, os);
     }
 
-    // 2. КПЛ = Корень Правый Левый
-    void printNRL(int it, ostream &os) {
+    // 2 - Корень Правый Левый
+    void printNRL(int it, ostream &os)
+    {
         os << data[it];
         if (check((it - 1) / 2))
             os << "{" << data[(it - 1) / 2] << "} ";
@@ -138,8 +157,9 @@ struct Heap_Array {
             printNRL(2 * it + 1, os);
     }
 
-    // 3. ЛПК = Левый Правый Корень
-    void printLRN(int it, ostream &os) {
+    // 3 - Левый Правый Корень
+    void printLRN(int it, ostream &os)
+    {
         if (check(2 * it + 1))
             printLRN(2 * it + 1, os);
         if (check(2 * it + 2))
@@ -151,8 +171,9 @@ struct Heap_Array {
             os << " ";
     }
 
-    // 4. ЛКП = Левый Корень Правый
-    void printLNR(int it, ostream &os) {
+    // 4 - Левый Корень Правый
+    void printLNR(int it, ostream &os)
+    {
         if (check(2 * it + 1))
             printLNR(2 * it + 1, os);
         os << data[it];
@@ -164,8 +185,9 @@ struct Heap_Array {
             printLNR(2 * it + 2, os);
     }
 
-    // 5. ПЛК = Правый Левый Корень
-    void printRLN(int it, ostream &os) {
+    // 5 - Правый Левый Корень
+    void printRLN(int it, ostream &os)
+    {
         if (check(2 * it + 2))
             printRLN(2 * it + 2, os);
         if (check(2 * it + 1))
@@ -177,8 +199,9 @@ struct Heap_Array {
             os << " ";
     }
 
-    // 6. ПКЛ = Правый Корень Левый
-    void printRNL(int it, ostream &os) {
+    // 6 - Правый Корень Левый
+    void printRNL(int it, ostream &os)
+    {
         if (check(2 * it + 2))
             printRNL(2 * it + 2, os);
         os << data[it];
@@ -202,34 +225,34 @@ struct Heap_Array {
 };
 
 template<class T>
-void Heap_Array<T>::insert(T v) {
+void Heap_Array<T>::insert(T v)
+{
     if (search(v) >= 0)
         return;
-    int i, parent;
     data.emplace_back(v);
-    i = data.size() - 1;
-    parent = (i - 1) / 2;
-    while (parent >= 0 && i > 0) {
-        if (data[i] > data[parent])
-            swap(data[i], data[parent]);
-        else
-            break;
-        check_brother(i);
+    int i = data.size() - 1;
+    int parent = (i - 1) / 2;
+    while (i > 0 && data[i] > data[parent])
+    {
+        swap(data[i], data[parent]);
+        //check_brother(i);
         i = parent;
         parent = (i - 1) / 2;
     }
-    check_brother(i);
-    check_brother((i - 1) / 2);
+    //check_brother(i);
+    //check_brother((i - 1) / 2);
 }
 
 template<class T>
-int Heap_Array<T>::search(T v, int it) const {
+int Heap_Array<T>::search(T v, int it) const
+{
     if (size() == 0)
         return -1;
     if (data[it] == v)
         return it;
 
-    if (2 * it + 1 < data.size() && v <= data[2 * it + 1]) {
+    if (2 * it + 1 < data.size() && v <= data[2 * it + 1])
+    {
         int ans = search(v, 2 * it + 1);
         if (ans > 0)
             return ans;
@@ -240,9 +263,11 @@ int Heap_Array<T>::search(T v, int it) const {
 }
 
 template<class T>
-void Heap_Array<T>::remove(T v) {
+void Heap_Array<T>::remove(T v)
+{
     int it = search(v);
-    if (it != -1) {
+    if (it != -1)
+    {
         data.erase(data.begin() + search(v));
         *this = Heap_Array(data);
     }
@@ -270,9 +295,11 @@ void Heap_Array<T>::remove(T v) {
 
 
 template<class T>
-Heap_Array<T> &Heap_Array<T>::sub_heap(T v) const {
+Heap_Array<T> &Heap_Array<T>::sub_heap(T v) const
+{
     int it = search(v);
-    if (it == -1) {
+    if (it == -1)
+    {
         return *(new Heap_Array<T>());
     }
     vector<T> h;
@@ -281,7 +308,8 @@ Heap_Array<T> &Heap_Array<T>::sub_heap(T v) const {
 }
 
 template<class T>
-void Heap_Array<T>::app_child(int it, vector<T> &vec) const {
+void Heap_Array<T>::app_child(int it, vector<T> &vec) const
+{
     vec.template emplace_back(data[it]);
     if (check(2 * it + 1))
         app_child(2 * it + 1, vec);
@@ -290,7 +318,8 @@ void Heap_Array<T>::app_child(int it, vector<T> &vec) const {
 }
 
 template<class T>
-bool Heap_Array<T>::search_heap(const Heap_Array<T> &heap) const {
+bool Heap_Array<T>::search_heap(const Heap_Array<T> &heap) const
+{
     int it = search(heap.data[0]);
     if (it == -1 || heap.data.size() > data.size())
         return false;
@@ -298,7 +327,8 @@ bool Heap_Array<T>::search_heap(const Heap_Array<T> &heap) const {
 }
 
 template<class T>
-bool Heap_Array<T>::equal_child(int it1, int it2, const Heap_Array<T> &heap) const {
+bool Heap_Array<T>::equal_child(int it1, int it2, const Heap_Array<T> &heap) const
+{
     if (check(it1) != heap.check(it2) || data[it1] != heap[it2])
         return false;
     if (!heap.check(2 * it2 + 1) && !heap.check(2 * it2 + 2))
@@ -314,7 +344,8 @@ bool Heap_Array<T>::equal_child(int it1, int it2, const Heap_Array<T> &heap) con
 }
 
 template<class T>
-void parent_node(const Heap_Array<T> &heap) {
+void parent_node(const Heap_Array<T> &heap)
+{
     cout << heap.data[0] << " ";
     for (int i = 1; i < heap.data.size(); i++)
         cout << heap.data[i] << "{" << heap.data[(i - 1) / 2] << "} ";
