@@ -10,38 +10,48 @@ struct Set_Node {
 
     Set_Node() : data() {}
 
+    /// Set из heap
     explicit Set_Node(Heap_Node<T> *heap) : data(*heap) {}
 
+    /// Set из vector
     explicit Set_Node(const vector<T> &vec) : data(vec) {}
 
+    /// Копирующий конструктор
     Set_Node(const Set_Node<T> &st) : data(st.data) {}
 
+    /// Поиск элемента
     [[nodiscard]] bool search(const T &target) const {
         return data.search(target);
     }
 
+    /// Вставка элемента
     void insert(const T &target) {
         data.insert(target);
     }
 
+    /// Вывод
     void print(ostream &out) {
         out << "{";
         if (data.root) data.root->print(out);
         out << "}";
     }
 
+    /// Удаление элемента
     void remove(const T &target) {
         data.remove(target);
     }
 
+    /// Получение значений
     [[nodiscard]] vector<T> getValues() const {
         return data.getValues();
     }
 
+    /// Получение длины
     [[nodiscard]] int getSize() const {
         return getValues().size();
     }
 
+    /// Проверка включения подмножества
     [[nodiscard]] bool include(const Set_Node<T> st) const {
         auto values = st.getValues();
         for (T item: values)
@@ -50,6 +60,7 @@ struct Set_Node {
         return true;
     }
 
+    /// Пересечение с множеством
     [[nodiscard]] Set_Node<T> &intersection(const Set_Node<T> &st) const {
         auto *intersection = new Set_Node<T>();
         vector<T> values = data.getValues();
@@ -59,6 +70,7 @@ struct Set_Node {
         return *intersection;
     }
 
+    /// Объединение с множеством
     [[nodiscard]] Set_Node<T> &unification(const Set_Node<T> &st) const {
         auto *unity = new Set_Node<T>();
         vector<T> values1 = data.getValues();
@@ -70,6 +82,7 @@ struct Set_Node {
         return *unity;
     }
 
+    /// Вычитание множества
     [[nodiscard]] Set_Node<T> &subtraction(const Set_Node<T> &st) const {
         auto *sub = new Set_Node<T>();
         vector<T> values = data.getValues();
@@ -116,6 +129,7 @@ struct Set_Node {
     ~Set_Node() = default;
 };
 
+/// Set из string
 Set_Node<int> &setFromString(const string &str) {
     auto *st = new Set_Node<int>();
     int item;

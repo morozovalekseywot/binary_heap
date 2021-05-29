@@ -16,9 +16,9 @@ struct Node {
     Node<T> *left = nullptr;
     Node<T> *right = nullptr;
 
-    Node(T value1, Node<T> *parent1, Node<T> *left1, Node<T> *right1) : value(value1), parent(parent1), left(left1),
-                                                                        right(right1) {}
+    Node(T value1, Node<T> *parent1, Node<T> *left1, Node<T> *right1) : value(value1), parent(parent1), left(left1), right(right1) {}
 
+    /// Поиск элемента
     Node *search(T target) {
         if (target == value)
             return this;
@@ -33,6 +33,7 @@ struct Node {
         return nullptr;
     }
 
+    /// Вставка элемента
     void insert(T target) {
         if (target == value)
             return;
@@ -60,6 +61,7 @@ struct Node {
         if (right->value < left->value) swap(left, right);
     }
 
+    /// Проверка равенства наследников
     bool equalChild(Node<T> &node) const {
         bool result = false;
         if (!left && !right && !node.left && !node.right)
@@ -73,6 +75,7 @@ struct Node {
         return result;
     }
 
+    /// Вывод
     void print(ostream &out) {
         out << value;
         if (left) {
@@ -85,6 +88,7 @@ struct Node {
         }
     };
 
+    /// Обходы
     void NLR(ostream &out) {
         out << value;
         if (parent) cout << "{" << parent->value << "}";
@@ -133,6 +137,7 @@ struct Node {
         if (left) left->RNL(out);
     }
 
+    /// Получить значения
     void getValues(vector<T> &values) {
         values.push_back(value);
         if (right) right->getValues(values);
@@ -155,7 +160,6 @@ struct Node {
             right = nullptr;
         }
     }
-//    ~Node() = default;
 };
 
 template<class T>
@@ -164,18 +168,21 @@ struct Heap_Node {
 
     Heap_Node() : root(nullptr) {}
 
+    /// Heap из array
     explicit Heap_Node(const T *list, int size) {
         for (int i = 0; i < size; i++) {
             insert(list[i]);
         }
     }
 
+    /// Heap из vector
     explicit Heap_Node(const vector<T> &vec) {
         for (T item: vec) {
             insert(item);
         }
     }
 
+    /// Копирующий конструктор
     Heap_Node(const Heap_Node<T> &heap) {
         if (heap.root) {
             root = new Node<T>(heap.root->value, heap.root->parent, heap.root->left, heap.root->right);
@@ -186,6 +193,7 @@ struct Heap_Node {
         }
     }
 
+    /// Копировать наследников
     void copyChild(Node<T> &item, Node<T> &p, int if_left) const {
         auto *node = new Node<T>(item.value, &p, nullptr, nullptr);
         if (item.left) node->left = item.left;
@@ -200,6 +208,7 @@ struct Heap_Node {
             copyChild(*(item.right), *node, 0);
     }
 
+    /// Поиск поддерева
     [[nodiscard]] bool searchHeap(const Heap_Node<T> &heap) const {
         Node<T> *node = root->search(heap.root->value);
         if (!node)
@@ -207,11 +216,13 @@ struct Heap_Node {
         return node->equalChild(*(heap.root));
     }
 
+    /// Поиск элемента
     [[nodiscard]] bool search(const T &target) const {
         if (root && root->search(target)) return true;
         return false;
     }
 
+    /// Вставка элемента
     void insert(const T &target) {
         if (!root) {
             root = new Node<T>(target, nullptr, nullptr, nullptr);
@@ -226,6 +237,7 @@ struct Heap_Node {
         }
     }
 
+    /// Удаление элемента
     void remove(const T &target) {
         if (!root) return;
         if (target > root->value) return;
@@ -269,10 +281,7 @@ struct Heap_Node {
         }
     }
 
-//    void print(ostream &out) const {
-//        if (root) root->print(out);
-//    }
-
+    /// Обходы
     void NLR(ostream &out) const {
         if (root) root->NLR(out);
     }
@@ -297,12 +306,14 @@ struct Heap_Node {
         if (root) root->RNL(out);
     }
 
+    /// Получить значения
     [[nodiscard]] vector<T> getValues() const {
         vector<T> vector;
         if (root) root->getValues(vector);
         return vector;
     }
 
+    /// Получение поддерева
     [[nodiscard]] Heap_Node<T> &subHeap(const T &target) const {
         Node<T> *node = root->search(target);
         auto *sub_heap = new Heap_Node<T>();
@@ -333,6 +344,7 @@ struct Heap_Node {
     ~Heap_Node() = default;
 };
 
+/// Heap из string
 Heap_Node<int> &heapFromString(const string &str) {
     auto *heap = new Heap_Node<int>();
     int item;
