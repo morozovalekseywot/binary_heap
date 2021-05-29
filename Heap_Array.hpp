@@ -32,6 +32,10 @@ struct Heap_Array
 {
     vector<T> data; // у i наследники 2*i+1 и 2*i+2
 
+    Heap_Array() : data(vector<T>())
+    {};
+
+    /// Heap from Vector
     explicit Heap_Array(const vector<T> &vec) : data(vec)
     {
         if (!data.empty())
@@ -43,12 +47,11 @@ struct Heap_Array
         }
     };
 
+    /// Копирубщий конструктор
     Heap_Array(const Heap_Array<T> &heap) : data(heap.data)
     {}
 
-    Heap_Array() : data(vector<T>())
-    {};
-
+    /// Heap from string
     explicit Heap_Array(const string &str, bool check)
     {
         vector<int> vec;
@@ -66,19 +69,21 @@ struct Heap_Array
         *this = Heap_Array(vec);
     }
 
+    /// Вставка элемента
     void insert(T v);
 
+    /// Поиск элемента
     int search(T v, int it = 0) const;
 
+    /// Удаление элемента
     void remove(T v);
 
-
-    //void heapify(int it = 0);
     [[nodiscard]] inline bool check(int it) const
     {
         return it < data.size();//&& heap[it] != NULL
     }
 
+    /// Получение размера кучи
     [[nodiscard]] int size() const
     {
         return data.size();
@@ -112,7 +117,7 @@ struct Heap_Array
     }
 
     // Обходы
-    // 1 - Корень Левый Правый
+    /// 1 - Корень Левый Правый
     void printNLR(int it, ostream &os)
     {
         os << data[it];
@@ -143,7 +148,7 @@ struct Heap_Array
             printNLR2(2 * it + 2, os);
     }
 
-    // 2 - Корень Правый Левый
+    /// 2 - Корень Правый Левый
     void printNRL(int it, ostream &os)
     {
         os << data[it];
@@ -157,7 +162,7 @@ struct Heap_Array
             printNRL(2 * it + 1, os);
     }
 
-    // 3 - Левый Правый Корень
+    /// 3 - Левый Правый Корень
     void printLRN(int it, ostream &os)
     {
         if (check(2 * it + 1))
@@ -171,7 +176,7 @@ struct Heap_Array
             os << " ";
     }
 
-    // 4 - Левый Корень Правый
+    /// 4 - Левый Корень Правый
     void printLNR(int it, ostream &os)
     {
         if (check(2 * it + 1))
@@ -185,7 +190,7 @@ struct Heap_Array
             printLNR(2 * it + 2, os);
     }
 
-    // 5 - Правый Левый Корень
+    /// 5 - Правый Левый Корень
     void printRLN(int it, ostream &os)
     {
         if (check(2 * it + 2))
@@ -199,7 +204,7 @@ struct Heap_Array
             os << " ";
     }
 
-    // 6 - Правый Корень Левый
+    /// 6 - Правый Корень Левый
     void printRNL(int it, ostream &os)
     {
         if (check(2 * it + 2))
@@ -213,13 +218,25 @@ struct Heap_Array
             printRNL(2 * it + 1, os);
     }
 
+    /// Получение поддерева
     Heap_Array<T> &sub_heap(T v) const;
 
     void app_child(int it, vector<T> &vec) const;
 
+    /// Равенства всех наследников
     bool equal_child(int it1, int it2, const Heap_Array<T> &heap) const;
 
+    /// Поиск вхождения поддерева
     bool search_heap(const Heap_Array<T> &heap) const;
+
+    /// Вывод кучи
+    inline friend ostream &operator<<(ostream &os, const Heap_Array &heap)
+    {
+        os << heap.data[0] << " ";
+        for (int i = 1; i < heap.data.size(); i++)
+            os << heap.data[i] << "{" << heap.data[(i - 1) / 2] << "} ";
+        return os;
+    }
 
     ~Heap_Array<T>() = default;
 };

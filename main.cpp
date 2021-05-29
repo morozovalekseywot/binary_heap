@@ -127,7 +127,7 @@ int main()
                 while (s2 != 0)
                 {
                     cout << endl << "Your heap:" << endl;
-                    hp.printNLR(0, cout);
+                    cout<<hp;
                     cout << endl << endl << "Select the action with heap:" << endl
                          << "1 - insert element" << endl
                          << "2 - search element" << endl
@@ -176,7 +176,7 @@ int main()
                             getline(cin, str);
                             Heap_Array<int> new_hp(str, true);
                             cout << endl << "New heap:" << endl;
-                            new_hp.printNLR(0, cout);
+                            cout<<new_hp;
                             cout << endl;
                             if (hp.search_heap(new_hp)) cout << "TRUE";
                             else cout << "FALSE";
