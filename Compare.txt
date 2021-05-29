@@ -1,0 +1,34 @@
+Test_Create
+Nodes: 20231 microseconds
+Array: 7611 microseconds
+Vector: 7522 microseconds
+
+Test_Insert
+Nodes: 19717 microseconds
+Array: 13631105 microseconds
+Vector: 330353 microseconds
+
+Test_Search
+Nodes: 28379980 microseconds
+Array: 9015317 microseconds
+Vector: 13990 microseconds
+
+Test_Include
+Nodes: 3929241 microseconds
+Array: 3155311 microseconds
+Vector: 485 microseconds
+
+Test_Sum
+Nodes: 109613 microseconds
+Array: 12119638 microseconds
+Vector: 3462 microseconds
+
+Test_Subtraction
+Nodes: 55970009 microseconds
+Array: 11140040 microseconds
+Vector: 2016 microseconds
+
+Test_Intersection
+Nodes: 55823941 microseconds
+Array: 9152606 microseconds
+Vector: 1888 microseconds

@@ -13,21 +13,21 @@ using namespace std;
 #define all(x) x.begin(), x.end()
 
 template<class T>
-struct Set_vec
+struct Set_Vector
 {
     vector<T> vec;
 
-    Set_vec<T>() : vec()
+    Set_Vector<T>() : vec()
     {};
 
 
-    explicit Set_vec(const vector<T> &Vec) : vec(Vec)
+    explicit Set_Vector(const vector<T> &Vec) : vec(Vec)
     {
         sort(vec.begin(), vec.end());
         Unique(vec);
     }
 
-    Set_vec(const Set_vec<T> &s) : vec(s.vec)
+    Set_Vector(const Set_Vector<T> &s) : vec(s.vec)
     {}
 
     bool search(const T v) const
@@ -38,6 +38,11 @@ struct Set_vec
 
     void insert(const T v)
     {
+        if(vec.size()==0)
+        {
+            vec.emplace_back(v);
+            return;
+        }
         auto it = lower_bound(all(vec), v);
         if (*it != v)
             vec.insert(it, v);
@@ -45,12 +50,14 @@ struct Set_vec
 
     void remove(const T v)
     {
+        if(vec.size()==0)
+            return;
         auto it = lower_bound(all(vec), v);
         if (it != vec.end())
             vec.erase(it);
     }
 
-    bool include(const Set_vec<T> &b)
+    bool include(const Set_Vector<T> &b)
     {
         int i = 0;
         for (int j = 0; j < b.size(); j++)
@@ -68,9 +75,9 @@ struct Set_vec
         return vec.size();
     }
 
-    Set_vec<T> &operator+(const Set_vec<T> &b) const
+    Set_Vector<T> &operator+(const Set_Vector<T> &b) const
     {
-        /*
+
         vector<T> ans(vec.size() + b.size());
         int i = 0, j = 0, size = 0;
         while (i < vec.size() && j < b.size())
@@ -97,14 +104,14 @@ struct Set_vec
             ans[size++] = b.vec[j++];
 
         ans.resize(size);
-        return *(new Set_vec(ans));
-         */
-        return merge(vec.begin(),vec.end(),b.vec.begin(),b.vec.end());
+        return *(new Set_Vector(ans));
+
+        //return merge(vec.begin(),vec.end(),b.vec.begin(),b.vec.end());
     }
 
-    Set_vec<T> &operator-(const Set_vec<T> &b) const
+    Set_Vector<T> &operator-(const Set_Vector<T> &b) const
     {
-        /*
+
         vector<T> ans(vec.size());
         int i = 0, j = 0, size = 0;
         while (i < vec.size() && j < b.size())
@@ -128,17 +135,17 @@ struct Set_vec
             while (i < vec.size())
                 ans[size++] = vec[i++];
         ans.resize(size);
-        return *(new Set_vec(ans));
-         */
-        vector<T> ans(vec.size());
-        set_difference(all(vec),all(b.vec)),ans.begin();
-        ans.shrink_to_fit();
-        return *(new Set_vec(ans));
+        return *(new Set_Vector(ans));
+
+//        vector<T> ans(vec.size());
+//        set_difference(all(vec),all(b.vec),ans.begin());
+//        ans.shrink_to_fit();
+//        return *(new Set_Vector(ans));
     }
 
-    Set_vec<T> &operator*(const Set_vec<T> &b) const
+    Set_Vector<T> &operator*(const Set_Vector<T> &b) const
     {
-        /*
+
         vector<T> ans(vec.size());
         int i = 0, j = 0, size = 0;
         while (i < vec.size() && j < b.size())
@@ -156,20 +163,20 @@ struct Set_vec
                 j++;
         }
         ans.resize(size);
-        return *(new Set_vec(ans));
-         */
-        vector<T> ans(vec.size());
-        set_intersection(all(vec),all(b.vec)),ans.begin();
-        ans.shrink_to_fit();
-        return *(new Set_vec(ans));
+        return *(new Set_Vector(ans));
+
+//        vector<T> ans(vec.size());
+//        set_intersection(all(vec),all(b.vec),ans.begin());
+//        ans.shrink_to_fit();
+//        return *(new Set_Vector(ans));
     }
 
-    friend bool operator==(const Set_vec<T> &a, const Set_vec<T> &b)
+    friend bool operator==(const Set_Vector<T> &a, const Set_Vector<T> &b)
     {
         return a.vec.data == b.vec.data;
     }
 
-    friend bool operator==(const Set_vec<T> &a, const set<T> &b)
+    friend bool operator==(const Set_Vector<T> &a, const set<T> &b)
     {
         if (a.size() != b.size())
             return false;
@@ -181,7 +188,7 @@ struct Set_vec
         return true;
     }
 
-    friend ostream &operator<<(ostream &os, const Set_vec &b)
+    friend ostream &operator<<(ostream &os, const Set_Vector &b)
     {
         os << "{";
         for (int i = 0; i < b.size() - 1; i++)
@@ -190,5 +197,5 @@ struct Set_vec
         return os;
     }
 
-    ~Set_vec<T>() = default;
+    ~Set_Vector<T>() = default;
 };

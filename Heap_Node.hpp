@@ -6,57 +6,51 @@
 #include <vector>
 #include <set>
 #include "Heap_Array.hpp"
+
 using namespace std;
 
 template<class T>
-struct Node
-{
+struct Node {
     T value;
     Node<T> *parent = nullptr;
     Node<T> *left = nullptr;
     Node<T> *right = nullptr;
 
     Node(T value1, Node<T> *parent1, Node<T> *left1, Node<T> *right1) : value(value1), parent(parent1), left(left1),
-                                                                        right(right1)
-    {}
+                                                                        right(right1) {}
 
-    Node *search(T target)
-    {
+    Node *search(T target) {
         if (target == value)
             return this;
-        if (left && target <= left->value)
-        {
+        if (left && target <= left->value) {
             auto searched = left->search(target);
             if (searched) return searched;
         }
-        if (right && target <= right->value)
-        {
+        if (right && target <= right->value) {
             auto searched = right->search(target);
             return searched;
         }
         return nullptr;
     }
 
-    void insert(T target)
-    {
+    void insert(T target) {
         if (target == value)
             return;
-        if (!left)
-        {
+        if (!left) {
             left = new Node<T>(target, this, nullptr, nullptr);
             if (right && (right->value < left->value)) swap(left, right);
             return;
         }
-        if (target <= left->value)
-            return left->insert(target);
-        if (!right)
-        {
+        if (!right) {
             right = new Node<T>(target, this, nullptr, nullptr);
             if (right->value < left->value) swap(left, right);
             return;
         }
-        if (target <= right->value)
-        {
+        if (target <= left->value) {
+            left->insert(target);
+            return;
+        }
+        if (target <= right->value) {
             right->insert(target);
             return;
         }
@@ -66,8 +60,7 @@ struct Node
         if (right->value < left->value) swap(left, right);
     }
 
-    bool equalChild(Node<T> &node) const
-    {
+    bool equalChild(Node<T> &node) const {
         bool result = false;
         if (!left && !right && !node.left && !node.right)
             return true;
@@ -80,23 +73,19 @@ struct Node
         return result;
     }
 
-    void print(ostream &out)
-    {
+    void print(ostream &out) {
         out << value;
-        if (left)
-        {
+        if (left) {
             out << ", ";
             left->print(out);
         }
-        if (right)
-        {
+        if (right) {
             out << ", ";
             right->print(out);
         }
     };
 
-    void NLR(ostream &out)
-    {
+    void NLR(ostream &out) {
         out << value;
         if (parent) cout << "{" << parent->value << "}";
         out << " ";
@@ -104,8 +93,7 @@ struct Node
         if (right) right->NLR(out);
     }
 
-    void NRL(ostream &out)
-    {
+    void NRL(ostream &out) {
         out << value;
         if (parent) cout << "{" << parent->value << "}";
         out << " ";
@@ -113,8 +101,7 @@ struct Node
         if (left) left->NRL(out);
     }
 
-    void LRN(ostream &out)
-    {
+    void LRN(ostream &out) {
         if (left) left->LRN(out);
         if (right) right->LRN(out);
         out << value;
@@ -122,8 +109,7 @@ struct Node
         out << " ";
     }
 
-    void LNR(ostream &out)
-    {
+    void LNR(ostream &out) {
         if (left) left->LNR(out);
         out << value;
         if (parent) out << "{" << parent->value << "}";
@@ -131,8 +117,7 @@ struct Node
         if (right) right->LNR(out);
     }
 
-    void RLN(ostream &out)
-    {
+    void RLN(ostream &out) {
         if (right) right->RLN(out);
         if (left) left->RLN(out);
         out << value;
@@ -140,8 +125,7 @@ struct Node
         out << " ";
     }
 
-    void RNL(ostream &out)
-    {
+    void RNL(ostream &out) {
         if (right) right->RNL(out);
         out << value;
         if (parent) out << "{" << parent->value << "}";
@@ -149,54 +133,51 @@ struct Node
         if (left) left->RNL(out);
     }
 
-    void getValues(vector<T> &values)
-    {
+    void getValues(vector<T> &values) {
         values.push_back(value);
         if (right) right->getValues(values);
         if (left) left->getValues(values);
     }
 
-    ~Node()
-    {
-        if (parent)
-        {
-            if (parent->left == this) parent->left = nullptr;
-            if (parent->right == this) parent->right = nullptr;
+    ~Node() {
+        if (parent) {
+            if (parent->left && parent->left == this) parent->left = nullptr;
+            if (parent->right && parent->right == this) parent->right = nullptr;
+            parent = nullptr;
         }
         parent = nullptr;
-        left = nullptr;
-        right = nullptr;
-    };
+        if (left) {
+            left->parent = nullptr;
+            left = nullptr;
+        }
+        if (right) {
+            right->parent = nullptr;
+            right = nullptr;
+        }
+    }
+//    ~Node() = default;
 };
 
 template<class T>
-struct Heap_Node
-{
+struct Heap_Node {
     Node<T> *root = nullptr;
 
-    Heap_Node() : root(nullptr)
-    {}
+    Heap_Node() : root(nullptr) {}
 
-    explicit Heap_Node(const T *list, int size)
-    {
-        for (int i = 0; i < size; i++)
-        {
+    explicit Heap_Node(const T *list, int size) {
+        for (int i = 0; i < size; i++) {
             insert(list[i]);
         }
     }
 
-    explicit Heap_Node(const vector<T> &vec)
-    {
-        for (T item: vec)
-        {
+    explicit Heap_Node(const vector<T> &vec) {
+        for (T item: vec) {
             insert(item);
         }
     }
 
-    Heap_Node(const Heap_Node<T> &heap)
-    {
-        if (heap.root)
-        {
+    Heap_Node(const Heap_Node<T> &heap) {
+        if (heap.root) {
             root = new Node<T>(heap.root->value, heap.root->parent, heap.root->left, heap.root->right);
             if (root->left)
                 copyChild(*(heap.root->left), *root, 1);
@@ -205,8 +186,7 @@ struct Heap_Node
         }
     }
 
-    void copyChild(Node<T> &item, Node<T> &p, int if_left) const
-    {
+    void copyChild(Node<T> &item, Node<T> &p, int if_left) const {
         auto *node = new Node<T>(item.value, &p, nullptr, nullptr);
         if (item.left) node->left = item.left;
         if (item.right) node->right = item.right;
@@ -220,108 +200,113 @@ struct Heap_Node
             copyChild(*(item.right), *node, 0);
     }
 
-    [[nodiscard]] bool searchHeap(const Heap_Node<T> &heap) const
-    {
+    [[nodiscard]] bool searchHeap(const Heap_Node<T> &heap) const {
         Node<T> *node = root->search(heap.root->value);
         if (!node)
             return false;
         return node->equalChild(*(heap.root));
     }
 
-    [[nodiscard]] bool search(const T &target) const
-    {
+    [[nodiscard]] bool search(const T &target) const {
         if (root && root->search(target)) return true;
         return false;
     }
 
-    void insert(const T &target)
-    {
-        if (!root)
-        {
+    void insert(const T &target) {
+        if (!root) {
             root = new Node<T>(target, nullptr, nullptr, nullptr);
             return;
         }
-        if (target <= root->value)
-        {
+        if (target <= root->value) {
             root->insert(target);
-        } else
-        {
+        } else {
             auto *new_node = new Node<T>(target, nullptr, root, nullptr);
             root->parent = new_node;
             root = new_node;
-
         }
     }
 
-    void remove(const T &target)
-    {
+    void remove(const T &target) {
+        if (!root) return;
         if (target > root->value) return;
         Node<T> *node = root->search(target);
-        while (node->left && node->right)
-        {
-            swap(node->value, node->right->value);
-            node = node->right;
+        if (node) {
+            while (node->left && node->right) {
+                swap(node->value, node->right->value);
+                node = node->right;
+            }
+            if (node->parent) {
+                if (node->left) {
+                    if (node->parent->right && node->parent->right == node) {
+                        node->parent->right = node->left;
+                        node->left->parent = node->parent;
+                    } else {
+                        node->parent->left = node->left;
+                        node->left->parent = node->parent;
+                    }
+                }
+                if (node->right) {
+                    if (node->parent->right && node->parent->right == node) {
+                        node->parent->right = node->right;
+                        node->right->parent = node->parent;
+                    } else {
+                        node->parent->left = node->right;
+                        node->right->parent = node->parent;
+                    }
+                }
+            } else {
+                if (!node->left && !node->right) {
+                    root = nullptr;
+                }
+                if (node->left) {
+                    root = node->left;
+                }
+                if (node->right) {
+                    root = node->right;
+                }
+            }
+            delete node;
         }
-        if (node->left)
-        {
-            node->parent->right = node->left;
-            node->left->parent = node->parent;
-        }
-        if (node->right)
-        {
-            node->parent->right = node->right;
-            node->right->parent = node->parent;
-        }
-        delete node;
     }
 
 //    void print(ostream &out) const {
 //        if (root) root->print(out);
 //    }
 
-    void NLR(ostream &out) const
-    {
+    void NLR(ostream &out) const {
         if (root) root->NLR(out);
     }
 
-    void NRL(ostream &out) const
-    {
+    void NRL(ostream &out) const {
         if (root) root->NRL(out);
     }
 
-    void LRN(ostream &out) const
-    {
+    void LRN(ostream &out) const {
         if (root) root->LRN(out);
     }
 
-    void LNR(ostream &out) const
-    {
+    void LNR(ostream &out) const {
         if (root) root->LNR(out);
     }
 
-    void RLN(ostream &out) const
-    {
+    void RLN(ostream &out) const {
         if (root) root->RLN(out);
     }
 
-    void RNL(ostream &out) const
-    {
+    void RNL(ostream &out) const {
         if (root) root->RNL(out);
     }
 
-    [[nodiscard]] vector<T> getValues() const
-    {
+    [[nodiscard]] vector<T> getValues() const {
         vector<T> vector;
         if (root) root->getValues(vector);
         return vector;
     }
 
-    [[nodiscard]] Heap_Node<T> &subHeap(const T &target) const
-    {
+    [[nodiscard]] Heap_Node<T> &subHeap(const T &target) const {
         Node<T> *node = root->search(target);
         auto *sub_heap = new Heap_Node<T>();
-        if (node)
-        {
+        if (node) {
             auto *new_root = new Node<T>(node->value, nullptr, node->left, node->right);
             sub_heap->root = new_root;
             if (new_root->left)
@@ -332,39 +317,32 @@ struct Heap_Node
         return *sub_heap;
     }
 
-    friend bool operator==(const Heap_Node<T> &heap, set <T> st)
-    {
+    friend bool operator==(const Heap_Node<T> &heap, set<T> st) {
         auto values = heap.getValues();
-        set <T> heap_set(values.begin(), values.end());
-        if (heap_set == st)
-        {
+        set<T> heap_set(values.begin(), values.end());
+        if (heap_set == st) {
             return true;
         }
         return false;
     }
 
-    friend bool operator!=(const Heap_Node<T> &heap, set <T> st)
-    {
+    friend bool operator!=(const Heap_Node<T> &heap, set<T> st) {
         return !(heap == st);
     }
 
     ~Heap_Node() = default;
 };
 
-Heap_Node<int> &heapFromString(const string &str)
-{
+Heap_Node<int> &heapFromString(const string &str) {
     auto *heap = new Heap_Node<int>();
     int item;
-    for (int i = 0; i < str.size(); i++)
-    {
+    for (int i = 0; i < str.size(); i++) {
         int j = i;
         while (j < str.size() && str[j] != ' ')
             j++;
-        if (str[i] == '-')
-        {
+        if (str[i] == '-') {
             item = -convert(str.substr(i + 1, j - i - 1));
-        } else
-        {
+        } else {
             item = convert(str.substr(i, j - i));
         }
         heap->insert(item);
